@@ -3,9 +3,11 @@ public class Sala {
 
     private final int filas;
     private final int columnas;
+    private int numeroSala;
     private final Asiento[][] asientos;
 
-    public Sala(int filas, int columnas) {
+    public Sala(int numeroSala, int filas, int columnas) {
+        this.numeroSala = numeroSala;
         this.filas = filas;
         this.columnas = columnas;
         this.asientos = new Asiento[filas][columnas];
@@ -56,5 +58,8 @@ public class Sala {
             }
         }
         return disponibles;
+    }
+    public int getNumeroSala() {
+        return numeroSala;
     }
 }
