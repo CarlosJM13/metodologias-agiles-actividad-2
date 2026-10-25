@@ -46,4 +46,15 @@ public class VistaSala {
 
         System.out.println("\n" + VERDE + "Verde = libre" + RESET + "   " + ROJO + "Rojo = ocupado (X)" + RESET);
     }
+
+    public void imprimirTicket(Ticket ticket) {
+        System.out.println("\n=======================================");
+        System.out.println("           TICKET DE COMPRA            ");
+        System.out.println("=======================================");
+        System.out.println("ID de Compra : " + ticket.getIdCompra());
+        System.out.println("Sala         : " + ticket.getNombreSala());
+        System.out.println("Fila         : " + ticket.getFila());
+        System.out.println("Asiento(s)   : " + ticket.getAsientos());
+        System.out.println("=======================================\n");
+    }
 }

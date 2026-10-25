@@ -6,18 +6,20 @@ public class ConfiguracionInicialDeLaSala {
     private final LectorConsola lector = new LectorConsola();
     private final VistaSala vista = new VistaSala();
 
-    // CAMBIO 1: En lugar de guardar una sola Sala, guardamos una lista de Salas
     private List<Sala> salas = new ArrayList<>();
 
-    // Método que se llama desde el main
+    // Lista para los tickets generados en el sistema
+    private List<Ticket> registroTickets = new ArrayList<>();
+
+    // Metodo que se llama desde el main
     public void iniciar() {
         System.out.println("=== CONFIGURACIÓN INICIAL DEL CINE ===");
 
-        // CAMBIO 2: Preguntar cuántas salas se van a administrar
+        //Preguntar cuantas salas se van a administrar
         int totalSalas = lector.pedirNumero("¿Cuántas salas administrarás hoy? (máximo 10): ", 10,
                 "Cantidad inválida. Ingrese un valor entre 1 y 10.");
 
-        // CAMBIO 3: Un ciclo para pedir dimensiones y crear cada sala por separado
+        // ciclo para pedir dimensiones y crear cada sala por separado
         for (int i = 1; i <= totalSalas; i++) {
             System.out.println("\n--- Definiendo dimensiones para la Sala " + i + " ---");
             int filas = lector.pedirNumero("¿Cuántas filas tendrá la sala? (máximo 26): ", 26,
@@ -25,12 +27,11 @@ public class ConfiguracionInicialDeLaSala {
             int columnas = lector.pedirNumero("¿Cuántos asientos por fila tendrá la sala?: ", Integer.MAX_VALUE,
                     "Dimensiones inválidas. Ingrese números enteros mayores a cero.");
 
-            // Usamos el nuevo constructor de Sala que recibe el número (ID), filas y columnas
+            // constructor para las salas y listas
             Sala nuevaSala = new Sala(i, filas, columnas);
             salas.add(nuevaSala); // Guardamos la sala en nuestra lista
         }
 
-        // 4. Menú
         int opcion = 0;
         while (opcion != 3) {
             vista.mostrarMenu();
@@ -40,28 +41,26 @@ public class ConfiguracionInicialDeLaSala {
                 break;
             }
 
-            // CAMBIO 4: Submenú para seleccionar la sala antes de continuar
+            // menu para seleccionar la sala antes de continuar
             System.out.println("\n-- SALAS DISPONIBLES --");
             for (Sala s : salas) {
                 System.out.println("Sala " + s.getNumeroSala());
             }
             int idSalaElegida = lector.pedirNumero("Selecciona el número de la sala: ", totalSalas, "Sala inválida. Elija una sala existente.");
 
-            // Obtenemos la sala seleccionada (restamos 1 porque las listas empiezan en 0)
             Sala salaActual = salas.get(idSalaElegida - 1);
 
             if (opcion == 1) {
-                // Le pasamos la sala actual al método de compra
+                // Le pasamos la sala actual a la compra
                 seleccionarAsiento(salaActual);
             } else if (opcion == 2) {
-                // Le pasamos la sala actual a la vista
+                // pasamos la sala actual a la vista
                 vista.mostrarSala(salaActual);
             }
         }
         System.out.println("¡Vuelve pronto a JoPo's Juan cinema!");
     }
 
-    // CAMBIO 5: Agregamos "Sala sala" como parámetro para que actúe sobre la sala que el usuario eligió
     private void seleccionarAsiento(Sala sala) {
         if (sala.estaLlena()) {
             System.out.println("La sala está llena, no quedan asientos disponibles.");
@@ -109,13 +108,13 @@ public class ConfiguracionInicialDeLaSala {
             }
         }
 
-        // Marcar los asientos seleccionados como ocupados
+        // Marcar los asientos seleccionados como ocupados y generar el ticket
         for (Asiento asiento : seleccionados) {
             asiento.setOcupado(true);
-        }
-        for (Asiento asiento : seleccionados) {
-            // EXTRA: Añadimos el número de sala al mensaje final de reserva para más claridad
             System.out.println("Asiento reservado: " + asiento.getId() + " en Sala " + sala.getNumeroSala());
+            Ticket nuevoTicket = new Ticket("Sala " + sala.getNumeroSala(), asiento.getFila(), String.valueOf(asiento.getNumero()));
+            registroTickets.add(nuevoTicket);
+            vista.imprimirTicket(nuevoTicket);
         }
         vista.mostrarSala(sala);
     }
